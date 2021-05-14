@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>じゃんけん</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">   
+    <script type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.3.2/dist/confetti.browser.min.js"></script>
+    
+</head>
+<body>
+
+    <h3 class="text-center">じゃんけんゲーム</h3>
+    
+    <div class=table__frame>
+    <table  width="600px"　>
+        <tr height="200" valign="middle"> 
+            <th width="200" height="200" ><div id="ahand"></div></th>
+            <th >VS</th>
+            <th width="200" height="200" ><div id="bhand"></div></th>
+        </tr>
+        <tr>
+            <th>自分</th>
+            <th>&nbsp;</th>
+            <th>相手</th>
+        </tr>
+        <tr>
+            <th colspan="3">&nbsp;</th>
+        </tr>
+        <tr>
+            <th colspan="3"></th>
+        </tr>
+    </table>
+    </div>
+
+
+
+    <div class="table__frame02">
+        <form name="janken">
+            <table width="350px">
+           
+            <tr>
+            <th><input  type="button" onClick="getahand(0)" value="グー"></th>
+            <th><input  type="button" onClick="getahand(1)" value="チョキ"></th>
+            <th><input  type="button" onClick="getahand(2)" value="パー"></th>
+            <th colspan="3"><input type="button" onClick="handreset()" value="リセット"></th>
+            </tr>
+
+            </table>
+            </form>
+    </div>
+
+    <div>
+        
+        <h3 class="text-center" colspan="3"> <div id="message"></div></h3>
+           
+    </div>
+
+   
+
+<script>
+
+    
+    hand= new Array("hand0.gif","hand1.gif","hand2.gif");
+    msg = new Array("Clickしてね","You Won!!", "You Lost","Draw")
+
+
+    timer = 0;
+    count = 0;
+
+    handreset();
+
+    function getahand(btn) {
+    //タイマーを止める
+    clearTimeout(timer);
+    //手を出す
+    r = Math.floor(Math.random()*3);
+    document.getElementById("ahand").innerHTML = "<img src='" + hand[btn] + "'>";
+    document.getElementById("bhand").innerHTML = "<img src='" + hand[r] + "'>"; 
+    //ボタンを使えなくする
+    document.janken.elements[0].disabled = true;
+    document.janken.elements[1].disabled = true;
+    document.janken.elements[2].disabled = true;
+    //あいこ
+    var num= 3;
+    //グー
+    if(btn==0&&r==1) num=1;
+    if(btn==0&&r==2) num=2;
+    //チョキ
+    if(btn==1&&r==0) num=2;
+    if(btn==1&&r==2) num=1;
+    //パー
+    if(btn==2&&r==1) num=2;
+    if(btn==2&&r==0) num=1;
+
+    
+   //表示
+    if(num==1){
+        console.log("関数が実行されました");
+        document.getElementById("message").classList.add("win"); 
+        //紙吹雪
+        const fubuki = document.getElementById("fubuki");
+        fubuki.onclick = cannon();
+    }
+
+   
+  
+    document.getElementById("message").innerHTML=msg[num];
+
+    } 
+        
+
+    function handreset(){
+    //初期状態に戻す
+    document.janken.elements[0].disabled = false;
+    document.janken.elements[1].disabled = false;
+    document.janken.elements[2].disabled = false;
+    document.getElementById("message").innerHTML = msg[0];
+    document.getElementById("message").classList.remove("win");
+    getbhand();
+    }
+
+    function getbhand(){
+    //手を順番に表示
+    document.getElementById("ahand").innerHTML = "<img src='" + hand[count] + "'>"; 
+    document.getElementById("bhand").innerHTML = "<img src='" + hand[count] + "'>";
+    count++;
+    if (count > 2) count = 0;
+    timer = setTimeout("getbhand()",500);
+    }
+
+
+    ///紙吹雪 confetti
+    function cannon(){
+    confetti({
+    particleCount: 100,
+    spread: 70,
+    origin: { y: 0.6 }
+    });}
+    
+
+
+</script>
+
+</body>
+</html>
